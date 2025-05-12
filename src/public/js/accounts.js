@@ -161,10 +161,8 @@ async function createAccount() {
         document.getElementById('accountForm').reset();
         if (validateCodeDom) {
             // 移除验证码容器
-            const captchaContainer = document.querySelector('.captcha-container');
-            if (captchaContainer) {
-                captchaContainer.remove();
-            }
+            document.getElementById('account-captcha').style.display = 'none';
+            validateCodeDom.value = ''
         }
         closeAddAccountModal();
         fetchAccounts();
@@ -172,31 +170,8 @@ async function createAccount() {
         // 如果返回的code是NEED_CAPTCHA, 则展示二维码和输入框, 允许用户输入验证码后重新提交
         if (data.code === 'NEED_CAPTCHA') {
             // 展示二维码
-            // 创建验证码容器
-            const captchaContainer = document.createElement('div');
-            captchaContainer.className = 'captcha-container';
-            captchaContainer.style.marginTop = '10px';
-            
-            // 添加验证码图片
-            const captchaImg = document.createElement('img');
-            captchaImg.src = data.data.captchaUrl;
-            captchaImg.alt = '验证码';
-            captchaImg.style.maxWidth = '200px';  // 限制最大宽
-            captchaImg.style.height = 'auto';  // 保持宽高比
-            captchaImg.style.marginBottom = '10px';
-            captchaContainer.appendChild(captchaImg);
-            
-            // 添加验证码输入框
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = 'validateCode';
-            input.placeholder = '请输入验证码';
-            input.style.width = '100%';
-            input.style.marginBottom = '10px';
-            captchaContainer.appendChild(input);
-            // 将验证码容器添加到表单中
-            const form = document.getElementById('accountForm');
-            form.insertBefore(captchaContainer, form.querySelector('.form-actions'));
+            document.getElementById('account-captcha').style.display = 'block';
+            document.getElementById('captchaImage').src = data.data.captchaUrl;
             message.warning('请输入验证码后重新提交');
         }else{
             message.warning('账号添加失败: ' + data.error);

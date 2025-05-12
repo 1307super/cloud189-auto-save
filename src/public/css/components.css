@@ -602,3 +602,41 @@
 .default-star:hover {
     opacity: 0.8;
 }
+
+.proxy-services-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.proxy-service-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    min-width: 80px;
+    margin-right: 10px;
+}
+
+.proxy-service-item input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    .proxy-services-container {
+        gap: 10px;
+    }
+    
+    .proxy-service-item {
+        min-width: auto;
+        margin-right: 0;
+        flex: 0 0 calc(50% - 5px); /* 在小屏幕上每行显示两个选项 */
+    }
+}
+
+/* 超小屏幕适配 */
+@media screen and (max-width: 375px) {
+    .proxy-service-item {
+        flex: 0 0 100%; /* 在超小屏幕上每行显示一个选项 */
+    }
+}

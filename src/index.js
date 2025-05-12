@@ -337,6 +337,20 @@ AppDataSource.initialize().then(async () => {
         }
     });
 
+    // 删除任务文件
+    app.delete('/api/tasks/files', async (req, res) => {
+        try{
+            const { taskId, files } = req.body;
+            if (!files || files.length === 0) {
+                throw new Error('未选择要删除的文件');
+            }
+            await taskService.deleteFiles(taskId, files);
+            res.json({ success: true, data: null });
+        }catch (error) {
+            res.json({ success: false, error: error.message });
+        }
+    })
+
     app.delete('/api/tasks/:id', async (req, res) => {
         try {
             const deleteCloud = req.body.deleteCloud;
@@ -511,7 +525,7 @@ AppDataSource.initialize().then(async () => {
         if (strmEnabled && task.enableSystemProxy){
             let oldFilesName = files.map(file => path.join(folderName, file.oldName));
             for (const file of oldFilesName) {
-                strmService.delete(path.join(task.account.localStrmPrefix, file))
+                await strmService.delete(path.join(task.account.localStrmPrefix, file))
             }
         }
         const newFiles = files.map(file => ({id: file.fileId, name: file.destFileName}))
@@ -538,9 +552,9 @@ AppDataSource.initialize().then(async () => {
                 if (strmEnabled){
                     // 从realFolderName中获取文件夹名称 删除对应的本地文件
                     const oldFile = path.join(folderName, file.oldName);
-                    strmService.delete(path.join(task.account.localStrmPrefix, oldFile))
+                    await strmService.delete(path.join(task.account.localStrmPrefix, oldFile))
                 }
-                successFiles.push(file)
+                successFiles.push({id: file.fileId, name: file.destFileName})
             }
         }
         // 重新生成STRM文件
@@ -563,20 +577,6 @@ AppDataSource.initialize().then(async () => {
         res.json({ success: true, data: null });
     });
 
-    // 删除任务文件
-    app.delete('/api/tasks/files', async (req, res) => {
-        try{
-            const { taskId, files } = req.body;
-            if (!files || files.length === 0) {
-                throw new Error('未选择要删除的文件');
-            }
-            await taskService.deleteFiles(taskId, files);
-            res.json({ success: true, data: null });
-        }catch (error) {
-            res.json({ success: false, error: error.message });
-        }
-    })
-    
     // 系统设置
     app.get('/api/settings', async (req, res) => {
         res.json({success: true, data: ConfigService.getConfig()})

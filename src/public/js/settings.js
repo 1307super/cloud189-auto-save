@@ -41,6 +41,7 @@ async function loadSettings() {
             document.getElementById('proxyPassword').value = settings.proxy?.password || '';
             document.getElementById('proxyTelegram').checked = settings.proxy?.services?.telegram || false;
             document.getElementById('proxyTmdb').checked = settings.proxy?.services?.tmdb || false;
+            document.getElementById('proxyOpenAI').checked = settings.proxy?.services?.openai || false;
             document.getElementById('proxyCloud189').checked = settings.proxy?.services?.cloud189 || false;
 
             // Bark 设置
@@ -139,6 +140,7 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
             services:{
                 telegram: document.getElementById('proxyTelegram').checked,
                 tmdb: document.getElementById('proxyTmdb').checked,
+                openai: document.getElementById('proxyOpenAI').checked,
                 cloud189: document.getElementById('proxyCloud189').checked
             }
         },

@@ -1381,7 +1381,7 @@ class TaskService {
         }
         const strmService = new StrmService()
         const folderName = task.realFolderName.substring(task.realFolderName.indexOf('/') + 1);
-        const strmList = []
+        let strmList = []
         strmList = files.map(file => path.join(folderName, file.name));
         // 判断是否启用了系统代理
         if (task.enableSystemProxy) {
@@ -1394,7 +1394,7 @@ class TaskService {
         }
         for (const strm of strmList) {
             // 删除strm文件
-            strmService.delete(path.join(task.account.localStrmPrefix, strm));
+            await strmService.delete(path.join(task.account.localStrmPrefix, strm));
         }
 
     }

@@ -92,6 +92,14 @@
                                 <label for="password">密码</label>
                                 <input type="password" id="password">
                             </div>
+                            <!---验证码-->
+                            <div class="form-group" id="account-captcha" style="display: none;">
+                                <label for="captcha">验证码</label>
+                                <div class="captcha-container">
+                                    <img id="captchaImage" src="" alt="验证码">
+                                    <input type="text" id="validateCode" placeholder="验证码">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="cookie">Cookie</label>
                                 <input type="cookie" id="cookie">
@@ -422,7 +430,7 @@
                                 <input type="checkbox" id="enablePushPlus">
                                 PushPlus 推送
                             </label>
-                            <input type="text" id="pushplusToken" placeholder="PushPlus serverUrl">
+                            <input type="text" id="pushplusToken" placeholder="PushPlus Token">
                             <input type="text" id="pushplusTopic" placeholder="群组编码, 不填仅给自己发送">
                             <select id="pushplusChannel">
                                 <option value="wechat">微信公众号</option>
@@ -460,17 +468,21 @@
                     </div>
                     <div class="proxy-options" style="margin-top: 10px;">
                         <label style="display: block; margin-bottom: 5px;">启用代理的服务：</label>
-                        <div style="display: flex; gap: 30px; align-items: center;">
-                            <label style="display: flex; align-items: center; cursor: pointer; min-width: 100px;">
-                                <input type="checkbox" id="proxyTelegram" style="margin-right: 5px;">
+                        <div class="proxy-services-container">
+                            <label class="proxy-service-item">
+                                <input type="checkbox" id="proxyTelegram">
                                 <span>Telegram</span>
                             </label>
-                            <label style="display: flex; align-items: center; cursor: pointer; min-width: 80px;">
-                                <input type="checkbox" id="proxyTmdb" style="margin-right: 5px;">
+                            <label class="proxy-service-item">
+                                <input type="checkbox" id="proxyTmdb">
                                 <span>TMDB</span>
                             </label>
-                            <label style="display: flex; align-items: center; cursor: pointer; min-width: 80px;">
-                                <input type="checkbox" id="proxyCloud189" style="margin-right: 5px;">
+                            <label class="proxy-service-item">
+                                <input type="checkbox" id="proxyOpenAI">
+                                <span>OpenAI</span>
+                            </label>
+                            <label class="proxy-service-item">
+                                <input type="checkbox" id="proxyCloud189">
                                 <span>天翼</span>
                             </label>
                         </div>

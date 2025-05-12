@@ -136,6 +136,7 @@ class StrmService {
                 }
             }
         } catch (error) {
+            console.log(error)
             logTaskEvent(`生成STRM文件失败: ${error.message}`);
             failed++
         }
