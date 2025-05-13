@@ -411,7 +411,9 @@
                                 Telegram 推送
                             </label>
                             <input type="text" id="proxyDomain" placeholder="反代地址, 选填">
+                            <label for="telegramBotToken">Bot Token</label>
                             <input type="text" id="telegramBotToken" placeholder="Bot Token">
+                            <label for="telegramChatId">Chat ID</label>
                             <input type="text" id="telegramChatId" placeholder="Chat ID">
 
                             <label>
@@ -430,8 +432,11 @@
                                 <input type="checkbox" id="enablePushPlus">
                                 PushPlus 推送
                             </label>
+                            <label for="pushplusToken">Token</label>
                             <input type="text" id="pushplusToken" placeholder="PushPlus Token">
+                            <label for="pushplusTopic">群组编码</label>
                             <input type="text" id="pushplusTopic" placeholder="群组编码, 不填仅给自己发送">
+                            <label for="pushplusChannel">推送渠道</label>
                             <select id="pushplusChannel">
                                 <option value="wechat">微信公众号</option>
                                 <option value="webhook">WebHook</option>
@@ -439,7 +444,9 @@
                                 <option value="sms">短信</option>
                                 <option value="mail">邮件</option>
                             </select>
+                            <label for="pushplusWebhook">Webhook(选填)</label>
                             <input type="text" id="pushplusWebhook" placeholder="仅在选择 WebHook 渠道时需要填写">
+                            <label for="pushplusTo">好友令牌(选填)</label>
                             <input type="text" id="pushplusTo" placeholder="好友令牌">
                         </div>
                     </div>
@@ -512,10 +519,16 @@
                                 <input type="checkbox" id="enableOpenAI">
                                 启用 AI 辅助
                             </label>
+                            <label for="openaiBaseUrl">API地址</label>
                             <input type="text" id="openaiBaseUrl" placeholder="API地址,如: https://open.bigmodel.cn/api/paas/v4">
+                            <label for="openaiApiKey">API Key</label>
                             <input type="text" id="openaiApiKey" placeholder="API Key">
+                            <label for="openaiModel">模型名称</label>
                             <input type="text" id="openaiModel" placeholder="模型名称">
+                            <label for="openaiTemplate">剧集命名模版</label>
                             <input type="text" id="openaiTemplate" placeholder="文件名模板">
+                            <label for="openaiMovieTemplate">电影命名模版</label>
+                            <input type="text" id="openaiMovieTemplate" placeholder="电影命名模版">
                             <div class="help-text-container">
                                 <button type="button" class="toggle-help-text" onclick="toggleHelpText(this)">显示帮助</button>
                                 <small class="form-text">
@@ -524,19 +537,22 @@
                                     • 智谱AI: https://open.bigmodel.cn/api/paas/v4
                                     <br/>
                                     <span style="color:orange">注意: 启用后AI重命名将优先执行（优先于正则重命名），会自动处理任务名称、文件夹名和剧集名称。如果您设置了正则重命名规则，则仅在手动执行时生效。</span><br/>
-                                    文件名模板示例：<br/>
+                                    剧集模板示例：<br/>
                                     <span style="background-color: #f0f0f0;">{name} - {se}{ext}</span> → 北上 - S01E01.mkv<br/>
                                     <span style="background-color: #f0f0f0;">{name}.第{sn}季第{en}集{ext}</span> → 北上.第1季第1集.mkv<br/>
                                     <span style="background-color: #f0f0f0;">{name}.{year}.S{s}E{e}{ext}</span> → 北上.2024.S01E01.mkv<br/>
-                                    可用占位符：<br/>
+                                    电影模板示例：<br/>
+                                    <span style="background-color: #f0f0f0;">{name} - {year}{ext}</span> → 指环王1 - 2001.mkv<br/>
+                                    通用占位符：<br/>
                                     {name} - 剧名<br/>
                                     {year} - 年份<br/>
+                                    {ext} - 扩展名（.mkv）<br/>
+                                    剧集额外占位符：<br/>
                                     {s} - 季数（补零）<br/>
                                     {sn} - 季数（不补零）<br/>
                                     {e} - 集数（补零）<br/>
                                     {en} - 集数（不补零）<br/>
                                     {se} - 季集格式（S01E01）<br/>
-                                    {ext} - 扩展名（.mkv）
                                 </small>
                             </div>  
                         </div>
@@ -576,10 +592,8 @@
                             </label>
                             <label for="embyServer">Emby 服务器地址</label>
                             <input type="text" id="embyServer" placeholder="例如: http://localhost:8096">
-                            <small class="form-text">Emby 服务器的访问地址</small>
                             <label for="embyApiKey">API Key</label>
                             <input type="text" id="embyApiKey" placeholder="Emby API Key">
-                            <small class="form-text">在 Emby 管理面板中生成的 API Key</small>
                         </div>
                     </div>
                 </div>

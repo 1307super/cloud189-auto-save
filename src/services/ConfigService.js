@@ -91,6 +91,7 @@ class ConfigService {
         model: 'GLM-4-Flash-250414',
         rename: {
           template: "{name} - {se}{ext}",  // 默认模板
+          movieTemplate: "{name} ({year}){ext}",  // 电影模板
         }
       },
       alist: {

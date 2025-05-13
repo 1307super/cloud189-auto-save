@@ -80,6 +80,7 @@ async function loadSettings() {
             document.getElementById('openaiApiKey').value = settings.openai?.apiKey || '';
             document.getElementById('openaiModel').value = settings.openai?.model || '';
             document.getElementById('openaiTemplate').value = settings.openai?.rename?.template || '';
+            document.getElementById('openaiMovieTemplate').value = settings.openai?.rename?.movieTemplate || '';
 
             // alist
             document.getElementById('enableAlist').checked = settings.alist?.enable || false;

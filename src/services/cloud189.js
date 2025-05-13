@@ -69,6 +69,7 @@ class Cloud189Service {
             }else{
                 logTaskEvent('其他异常:' + error.message)
             }
+            console.log(error)
             return null
         }
     }
@@ -88,6 +89,7 @@ class Cloud189Service {
                 // 捕获其他类型的错误
                 logTaskEvent('获取用户空间信息失败:' +  error.message);
             }
+            console.log(error)
             return null
         }
     
@@ -306,6 +308,7 @@ class Cloud189Service {
                     data: error.data.image // 包含验证码图片和相关token信息
                 }
             }
+            console.log(error)
             // 处理其他错误
             return {
                 success: false,

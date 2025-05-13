@@ -798,7 +798,7 @@ class TaskService {
         // 处理aiFilename, 文件命名通过配置文件的占位符获取
         // 获取用户配置的文件名模板，如果没有配置则使用默认模板
         const template = resourceInfo.type === 'movie' 
-        ? '{name} ({year}){ext}'  // 电影模板
+        ? ConfigService.getConfigValue('openai.rename.movieTemplate') || '{name} ({year}){ext}'  // 电影模板
         : ConfigService.getConfigValue('openai.rename.template') || '{name} - {se}{ext}';  // 剧集模板
         for (const file of files) {
             try {
@@ -1336,7 +1336,7 @@ class TaskService {
     // ai命名处理
     async handleAiRename(files, resourceInfo) {
         const template = resourceInfo.type === 'movie' 
-        ? '{name} ({year}){ext}'  // 电影模板
+        ? ConfigService.getConfigValue('openai.rename.movieTemplate') || '{name} ({year}){ext}'  // 电影模板
         : ConfigService.getConfigValue('openai.rename.template') || '{name} - {se}{ext}';  // 剧集模板
         const aiNames = resourceInfo.episode
         const newFiles = [];

@@ -708,6 +708,7 @@ class TelegramBotService {
                 targetFolder: targetFolder.path,
                 tgbot: true,
                 overwriteFolder: data?.o,
+                accessCode: this.currentAccessCode
             };
             const tasks = await this.taskService.createTask(taskDto);
             // 遍历获取task.id
