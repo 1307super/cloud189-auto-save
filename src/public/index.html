@@ -492,6 +492,10 @@
                                 <input type="checkbox" id="proxyCloud189">
                                 <span>天翼</span>
                             </label>
+                            <label class="proxy-service-item">
+                                <input type="checkbox" id="proxyCustomPush">
+                                <span>自定义推送</span>
+                            </label>
                         </div>
                     </div>
                     </div>
@@ -663,6 +667,7 @@
 <script src="/js/cloudsaver.js"></script>
 <script src="/js/chat.js"></script>
 <script src="/js/strm.js"></script>
+<script src="/js/customPush.js"></script> 
 
 
 </body>
@@ -811,6 +816,9 @@
         <div class="floating-btn" onclick="openStrmModal()" title="STRM生成器">
             <img src="/icons/link.svg" alt="STRM">
         </div>
+        <div class="floating-btn" onclick="openCustomPushManagementModal()" title="自定义推送">
+            <img src="/icons/push.svg" alt="自定义推送">
+        </div>
         <div class="floating-btn" id="showLogsBtn" title="查看日志">
             <img src="/icons/logs.svg" alt="查看日志">
         </div>
@@ -900,4 +908,106 @@
                 <button type="button" class="btn-default" onclick="closeStrmModal()">取消</button>
             </div>
         </form>
-    </di
+    </div>
+</div>
+
+<!--自定义推送-->
+<div id="customPushManagementModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>自定义推送管理</h3>
+            <button type="button" class="btn-default" onclick="openAddEditCustomPushModal(null)">添加推送</button>
+            <button class="close-btn" onclick="closeCustomPushManagementModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <table id="customPushTable" class="table-view">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>描述</th>
+                        <th>启用</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 自定义推送列表将由JavaScript动态填充 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="addEditCustomPushModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="addEditCustomPushModalTitle">添加自定义推送</h3> <!-- 标题会动态改变 -->
+            <button class="close-btn" onclick="closeAddEditCustomPushModal()">&times;</button>
+        </div>
+        <form id="addEditCustomPushForm" onsubmit="saveCustomPushConfig(event)">
+            <div class="modal-body">
+                <input type="hidden" id="customPushEditIndex"> <!-- 用于编辑时存储索引 -->
+                <div class="form-group">
+                    <label for="customPushName">名称</label>
+                    <input type="text" id="customPushName" required>
+                </div>
+                <div class="form-group">
+                    <label for="customPushDescription">描述</label>
+                    <input type="text" id="customPushDescription">
+                </div>
+                <div class="form-group">
+                    <label for="customPushUrl">URL</label>
+                    <input type="url" id="customPushUrl" required>
+                </div>
+                <div class="form-group">
+                    <label for="customPushMethod">请求方法 (Method)</label>
+                    <select id="customPushMethod">
+                        <option value="POST">POST</option>
+                        <option value="GET">GET</option>
+                        <option value="PUT">PUT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="customPushContentType">内容类型 (Content-Type)</label>
+                    <select id="customPushContentType">
+                        <option value="application/json">application/json</option>
+                        <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>字段配置</label>
+                    <small>当字段类型为JSON时, 字段名不会作为参数传入</small>
+                    <div id="customPushFieldsContainer">
+                    </div>
+                    <button type="button" class="btn-default" onclick="addCustomPushFieldRow()">添加字段</button>
+                </div>
+                <div class="form-group">
+                    <label for="customPushEnabled">
+                        <input type="checkbox" id="customPushEnabled">
+                        <span>启用此推送</span>
+                    </label>
+                </div>
+                <div class="help-text-container">
+                    <button type="button" class="toggle-help-text" onclick="toggleHelpText(this)">显示帮助</button>
+                    <small class="form-text">
+                        <h5 style="margin-top:0; margin-bottom: 8px;">关于 JSON 类型字段的重要说明:</h5>
+                                    <p style="font-size: 0.9em; margin-bottom: 5px;">当字段类型选择为 "JSON" 时:</p>
+                                    <ul style="font-size: 0.9em; margin-left: 20px; padding-left: 0; list-style-type: disc;">
+                                        <li>此字段的“字段名”将被忽略。</li>
+                                        <li>整个请求体将直接使用此字段的“字段值”内容。</li>
+                                        <li>“字段值”中可使用 <code>{{content}}</code> 模板变量，它将被替换为消息内容。</li>
+                                        <li>“字段值”<strong>必须</strong>是严格有效的JSON格式。所有键名和字符串值 (包括代表字符串的 <code>{{content}}</code>) 都需用双引号包裹。</li>
+                                    </ul>
+                                    <p style="font-size: 0.9em; margin-bottom: 5px;"><strong>例如:</strong></p>
+                                    <pre style="background-color: var(--code-background-color); color: var(--text-color); padding: 8px; border-radius: 4px; font-size: 0.85em; white-space: pre-wrap; word-break: break-all;"><code>{\"msgtype\":\"text\",\"text\": {\"content\": \"{{content}}\"}}</code></pre>
+                                    <small style="font-size: 0.85em; display: block; margin-top: 8px;">请注意：不正确的JSON格式将导致推送失败。建议配置后进行测试。</small>
+                    </small>
+                </div>  
+            </div>
+            <div class="form-actions">
+                <button type="submit">保存</button>
+                <button type="button" id="testCustomPushBtn" onclick="testCustomPushConfig()" class="btn-default">测试推送</button>
+                <button type="button" class="btn-default" onclick="closeAddEditCustomPushModal()">取消</button>
+            </div>
+        </form>
+    </div>
+</div>

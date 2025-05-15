@@ -640,3 +640,47 @@
         flex: 0 0 100%; /* 在超小屏幕上每行显示一个选项 */
     }
 }
+
+/* 1. 固定自定义推送弹窗高度, 超出高度出现滚动条 */
+#customPushManagementModal .modal-body,
+#addEditCustomPushModal .modal-body {
+    max-height: 70vh; /* 您可以根据需要调整这个值，例如 400px, 500px */
+    overflow-y: auto;
+    padding-right: 15px; /* 为滚动条留出空间，避免内容遮挡 */
+}
+
+/* 确保 #addEditCustomPushModal 的 modal-content 也允许内容扩展 */
+#addEditCustomPushModal .modal-content {
+    max-height: 85vh; /* 限制整个模态框内容区域的最大高度 */
+    display: flex;
+    flex-direction: column;
+}
+
+#addEditCustomPushModal .modal-body {
+    flex-grow: 1; /* 让 modal-body 占据剩余空间并可滚动 */
+}
+
+
+/* 2. 动态字段三个表单宽度平均分 (已在JS中通过flex:1实现, 这里是可选的补充样式) */
+.custom-push-field-row select,
+.custom-push-field-row input[type="text"],
+.custom-push-field-row textarea {
+    min-width: 0; /* 允许 flex item 收缩到小于其内容宽度 */
+}
+
+/* 3. 动态字段的删除按钮样式微调 (如果JS中的样式不够) */
+.custom-push-field-row .btn-danger {
+    /* 如果需要更精细的控制，可以在这里添加样式 */
+    /* 例如，确保按钮高度与其他表单元素一致 */
+    align-self: center; /* 如果flex布局导致垂直对齐问题 */
+}
+label[for="customPushEnabled"] {
+    display: flex; /* 使用 flex 布局 */
+    align-items: center; /* 垂直居中对齐内部元素 */
+    flex-direction: row; /* 确保子元素按其在HTML中的顺序排列（即复选框在前，文字在后）*/
+  }
+  
+  label[for="customPushEnabled"] input[type="checkbox"] {
+    margin-right: 6px; 
+    flex: 0;
+  }

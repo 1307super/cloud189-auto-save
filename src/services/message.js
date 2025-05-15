@@ -44,7 +44,8 @@ class MessageUtil {
                 channel: settings.pushplus?.channel || '',
                 webhook: settings.pushplus?.webhook || '',
                 to: settings.pushplus?.to || '',
-            }
+            },
+            customPush: settings.customPush || []
         });
     }
 

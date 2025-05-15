@@ -98,7 +98,8 @@ class ConfigService {
         enable: false,
         baseUrl: '',
         apiKey: ''
-      }
+      },
+      customPush: [] // 自定义推送
     };
     this._init();
   }

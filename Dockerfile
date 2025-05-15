@@ -49,6 +49,8 @@ RUN mkdir -p /home/data
 # 创建STRM目录
 RUN mkdir -p /home/strm
 
+# 挂载点
+VOLUME ["/home/data", "/home/strm"]
 # 暴露端口
 EXPOSE 3000
 

@@ -23,6 +23,7 @@ const cors = require('cors');
 const { EmbyService } = require('./services/emby');
 const { StrmService } = require('./services/strm');
 const AIService = require('./services/ai');
+const CustomPushService = require('./services/message/CustomPushService');
 
 const app = express();
 app.use(cors({
@@ -112,6 +113,9 @@ app.use((req, res, next) => {
 });
 // 初始化数据库连接
 AppDataSource.initialize().then(async () => {
+    // 当前版本:
+    const currentVersion = packageJson.version;
+    console.log(`当前系统版本: ${currentVersion}`);
     console.log('数据库连接成功');
 
     // 初始化 STRM 目录权限
@@ -612,7 +616,7 @@ AppDataSource.initialize().then(async () => {
     })
 
     app.get('/api/version', (req, res) => {
-        res.json({ version: packageJson.version });
+        res.json({ version: currentVersion });
     });
 
     // 解析分享链接
@@ -795,6 +799,20 @@ AppDataSource.initialize().then(async () => {
             )
             return res.json({ success: true, data: await taskService.handleAiRename(files, resourceInfo) });
         } catch (error) {
+            res.json({ success: false, error: error.message });
+        }
+    })
+
+    app.post('/api/custom-push/test', async (req, res) => {
+        try{
+            const configTest = req.body
+            if (await new CustomPushService([]).testPush(configTest)){
+                res.json({ success: true, data: null });
+            }else{
+                res.json({ success: false, error: '推送测试失败' });
+            }
+
+        }catch (error) {
             res.json({ success: false, error: error.message });
         }
     })

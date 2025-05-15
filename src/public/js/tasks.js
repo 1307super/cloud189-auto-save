@@ -1020,6 +1020,7 @@ async function deleteTaskFiles() {
         if (data.success) {
             message.success('删除成功');
             // 刷新文件列表
+            closeFileListModal()
             showFileListModal(chooseTask.id);
             fetchTasks()
         } else {

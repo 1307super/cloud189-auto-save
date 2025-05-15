@@ -87,6 +87,28 @@ button {
     background: #40a9ff;
     border-color: #40a9ff;
 }
+.btn-small {
+    padding: 5px 8px; /* 较小的内边距 */
+    font-size: 0.85em; /* 较小的字体大小 */
+    border-radius: 3px; /* 轻微的圆角 */
+    margin: 2px; /* 轻微的外边距，如果需要的话 */
+    cursor: pointer;
+    border: 1px solid #ccc; /* 默认边框 */
+    background-color: #f8f9fa; /* 默认背景色 */
+    color: #333; /* 默认文字颜色 */
+    text-decoration: none; /* 移除链接下划线（如果是a标签） */
+    display: inline-block; /* 确保正确的布局 */
+    line-height: 1.2; /* 调整行高 */
+}
+
+.btn-small:hover {
+    background-color: #e9ecef; /* 悬停背景色 */
+    border-color: #bbb; /* 悬停边框色 */
+}
+.btn-small.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
 /* 标题区域样式 */
 .header {
     display: flex;

@@ -75,8 +75,7 @@ class StrmService {
                 // 将不在strmFiles中的文件删除
                 for (const file of strmFiles) {
                     if (!files.some(f => path.parse(f.name).name === path.parse(file.name).name)) {
-                        await fs.unlink(path.join(this.baseDir, file.path));
-                        logTaskEvent(`删除STRM文件成功: ${file.name}`);
+                        await this.delete(file.path);
                     }
                 }
             }
@@ -85,7 +84,7 @@ class StrmService {
             for (const file of files) {
                 // 检查文件是否是媒体文件
                 if (!this._checkFileSuffix(file, mediaSuffixs)) {
-                    logTaskEvent(`文件不是媒体文件，跳过: ${file.name}`);
+                    // logTaskEvent(`文件不是媒体文件，跳过: ${file.name}`);
                     skipped++
                     continue;
                 }
@@ -100,7 +99,7 @@ class StrmService {
                     try {
                         await fs.access(strmPath);
                         if (!overwrite) {
-                            logTaskEvent(`STRM文件已存在，跳过: ${strmPath}`);
+                            // logTaskEvent(`STRM文件已存在，跳过: ${strmPath}`);
                             skipped++
                             continue;
                         }
@@ -306,16 +305,41 @@ class StrmService {
         const dirPath = parsedPath.dir;
         const fileNameWithoutExt = parsedPath.name;
         const strmPath = path.join(this.baseDir, dirPath, `${fileNameWithoutExt}.strm`);
-        
+        const nfoPath = path.join(this.baseDir, dirPath, `${fileNameWithoutExt}.nfo`);
+        const thumbPath = path.join(this.baseDir, dirPath, `${fileNameWithoutExt}-thumb.jpg`);
         try {
-            // 检查目录是否存在
-            try {
+           // 删除 .strm 文件
+           try {
                 await fs.access(strmPath);
+                await fs.unlink(strmPath);
+                logTaskEvent(`删除STRM文件成功: ${strmPath}`);
             } catch (err) {
-                return;
+                if (err.code !== 'ENOENT') { // 如果不是文件不存在错误，则记录
+                    logTaskEvent(`尝试删除STRM文件失败: ${strmPath}, 错误: ${err.message}`);
+                }
             }
-            await fs.unlink(strmPath);
-            logTaskEvent(`删除STRM文件成功: ${strmPath}`);
+
+            // 删除 .nfo 文件
+            try {
+                await fs.access(nfoPath);
+                await fs.unlink(nfoPath);
+                logTaskEvent(`删除NFO文件成功: ${nfoPath}`);
+            } catch (err) {
+                if (err.code !== 'ENOENT') { // 如果不是文件不存在错误，则记录
+                    logTaskEvent(`尝试删除NFO文件失败: ${nfoPath}, 错误: ${err.message}`);
+                }
+            }
+
+            // 删除 -thumb.jpg 图片
+            try {
+                await fs.access(thumbPath);
+                await fs.unlink(thumbPath);
+                logTaskEvent(`删除Thumb图片成功: ${thumbPath}`);
+            } catch (err) {
+                if (err.code !== 'ENOENT') { // 如果不是文件不存在错误，则记录
+                    logTaskEvent(`尝试删除Thumb图片失败: ${thumbPath}, 错误: ${err.message}`);
+                }
+            }
             
             // 尝试删除空目录
             const targetDir = path.join(this.baseDir, dirPath);

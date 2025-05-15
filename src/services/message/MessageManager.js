@@ -3,7 +3,7 @@ const TelegramService = require('./TelegramService');
 const WxPusherService = require('./WxPusherService');
 const BarkService = require('./BarkService');
 const PushPlusService = require('./PushPlusService');
-
+const CustomPushService = require('./CustomPushService');
 class MessageManager {
     constructor() {
         this.services = [];
@@ -63,6 +63,9 @@ class MessageManager {
             pushPlusService.initialize();
             this.services.push(pushPlusService);
         }
+
+        // 自定义推送
+        this.services.push(new CustomPushService(config.customPush));
     }
 
     /**
