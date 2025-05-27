@@ -984,8 +984,13 @@ function parseCloudShare(shareText) {
     
     // 提取URL - 支持两种格式
     const urlPatterns = [
-        /(https?:\/\/cloud\.189\.cn\/web\/share\?[^\s]+)/,  // web/share格式
-        /(https?:\/\/cloud\.189\.cn\/t\/[a-zA-Z0-9]+)/      // t/xxx格式
+        /(https?:\/\/cloud\.189\.cn\/web\/share\?[^\s]+)/,     // web/share格式
+        /(https?:\/\/cloud\.189\.cn\/t\/[a-zA-Z0-9]+)/,        // t/xxx格式
+        /(https?:\/\/h5\.cloud\.189\.cn\/share\.html#\/t\/[a-zA-Z0-9]+)/, // h5分享格式
+        /(https?:\/\/[^/]+\/web\/share\?[^\s]+)/,              // 其他域名的web/share格式
+        /(https?:\/\/[^/]+\/t\/[a-zA-Z0-9]+)/,                 // 其他域名的t/xxx格式
+        /(https?:\/\/[^/]+\/share\.html[^\s]*)/,               // share.html格式
+        /(https?:\/\/content\.21cn\.com[^\s]+)/                // 订阅链接格式
     ];
 
     for (const pattern of urlPatterns) {

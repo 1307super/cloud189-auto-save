@@ -30,7 +30,8 @@ class ConfigService {
         chatId: '',
         bot: {
           enable: false,
-          botToken: ''
+          botToken: '',
+          chatId: ''
         }
       },
       wxpusher: {

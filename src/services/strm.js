@@ -157,7 +157,9 @@ class StrmService {
         const messages = [];
         for(const account of accounts) {
             try {
-                let startPath = path.basename(account.cloudStrmPrefix);
+                let startPath = account.cloudStrmPrefix.includes('/d/') 
+                ? account.cloudStrmPrefix.split('/d/')[1] 
+                : path.basename(account.cloudStrmPrefix);
                 // 初始化统计信息
                 const stats = {
                     success: 0,

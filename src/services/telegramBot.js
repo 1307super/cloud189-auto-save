@@ -11,8 +11,9 @@ const ProxyUtil = require('../utils/ProxyUtil');
 const cloud189Utils = require('../utils/Cloud189Utils');
 
 class TelegramBotService {
-    constructor(token) {
+    constructor(token, chatId) {
         this.token = token;
+        this.chatId = chatId
         this.bot = null;
         this.accountRepo = AppDataSource.getRepository(Account);
         this.commonFolderRepo = AppDataSource.getRepository(CommonFolder);
@@ -154,6 +155,9 @@ class TelegramBotService {
 
         this.bot.on('message', async (msg) => {
             const chatId = msg.chat.id;
+            if (!this._checkChatId(chatId)){
+                return;
+            }
             // 忽略命令消息
             if (msg.text?.startsWith('/')) return;
             // 搜索模式下处理消息
@@ -183,6 +187,9 @@ class TelegramBotService {
 
         this.bot.onText(/cloud\.189\.cn/, async (msg) => {
             const chatId = msg.chat.id;
+            if (!this._checkChatId(chatId)){
+                return;
+            }
             // 如果处于搜索模式，则不处理
             if (this.isSearchMode) {
                 return;
@@ -206,6 +213,7 @@ class TelegramBotService {
         // 添加任务列表命令
         this.bot.onText(/\/tasks/, async (msg) => {
             const chatId = msg.chat.id;
+            if (!this._checkChatId(chatId)) return
             if (!this._checkUserId(chatId)) return
             await this.showTasks(msg.chat.id);
         });
@@ -213,12 +221,14 @@ class TelegramBotService {
         // 添加常用目录查询命令
         this.bot.onText(/\/fl$/, async (msg) => {
             const chatId = msg.chat.id;
+            if (!this._checkChatId(chatId)) return
             if (!this._checkUserId(chatId)) return
             await this.showCommonFolders(chatId);
         });
 
         this.bot.onText(/\/fs$/, async (msg) => {
             const chatId = msg.chat.id;
+            if (!this._checkChatId(chatId)) return
             if (!this._checkUserId(chatId)) return
             await this.showFolderTree(chatId);
         });
@@ -227,6 +237,7 @@ class TelegramBotService {
         this.bot.onText(/^\/execute_(\d+)$/, async (msg, match) => {
             const chatId = msg.chat.id;
             const taskId = match[1];
+            if (!this._checkChatId(chatId)) return
             if(!this._checkTaskId(taskId)) return;
             const message = await this.bot.sendMessage(chatId, `任务开始执行`);
             try{
@@ -245,6 +256,7 @@ class TelegramBotService {
         // 执行所有任务
         this.bot.onText(/^\/execute_all$/, async (msg) => {
             const chatId = msg.chat.id;
+            if (!this._checkChatId(chatId)) return
             const message = await this.bot.sendMessage(chatId, `开始执行所有任务...`);
             try {
                 await this.taskService.processAllTasks(true);
@@ -264,6 +276,7 @@ class TelegramBotService {
         this.bot.onText(/\/strm_(\d+)/, async (msg, match) => {
             const chatId = msg.chat.id;
             const taskId = match[1];
+            if (!this._checkChatId(chatId)) return
             if(!this._checkTaskId(taskId)) return;
             const task = await this.taskService.getTaskById(taskId);
             if (!task) {
@@ -284,6 +297,7 @@ class TelegramBotService {
         this.bot.onText(/\/emby_(\d+)/, async (msg, match) => {
             const chatId = msg.chat.id;
             const taskId = match[1];
+            if (!this._checkChatId(chatId)) return
             if(!this._checkTaskId(taskId)) return;
             const task = await this.taskService.getTaskById(taskId);
             if (!task) {
@@ -305,6 +319,7 @@ class TelegramBotService {
         this.bot.onText(/\/dt_(\d+)/, async (msg, match) => {
             const chatId = msg.chat.id;
             const taskId = match[1];
+            if (!this._checkChatId(chatId)) return
             const keyboard = [
                 [
                     { text: '是', callback_data: JSON.stringify({ t: 'dt', i: taskId, c: true, df: true }) },
@@ -321,6 +336,7 @@ class TelegramBotService {
         this.bot.onText(/\/df_(\d+)/, async (msg, match) => {
             const chatId = msg.chat.id;
             const folderId = match[1];
+            if (!this._checkChatId(chatId)) return
             if (!this._checkUserId(chatId)) return
           
             try {
@@ -338,6 +354,7 @@ class TelegramBotService {
         // 搜索CloudSaver命令
         this.bot.onText(/\/search_cs/, async (msg) => {
             const chatId = msg.chat.id;
+            if (!this._checkChatId(chatId)) return
             if (this.isSearchMode) {
                 await this.bot.sendMessage(chatId, '当前已处于搜索模式, 请直接输入关键字搜索资源\n输入 /cancel 退出搜索模式');
                 return;
@@ -356,6 +373,7 @@ class TelegramBotService {
 
         this.bot.onText(/\/cancel/, async (msg) => {
             const chatId = msg.chat.id;
+            if (!this._checkChatId(chatId)) return
             // 清除缓存
             this.currentShareLink = null;
             this.currentAccessCode = null;
@@ -430,6 +448,7 @@ class TelegramBotService {
         this.bot.onText(/\/tmdb (.+)/, async (msg, match) => {
             const chatId = msg.chat.id;
             const input = match[1];
+            if (!this._checkChatId(chatId)) return
             let title, year;
 
             // 解析输入的标题和年份
@@ -496,6 +515,9 @@ class TelegramBotService {
     }
 
     async showAccounts(chatId, messageId = null) {
+        if (!this._checkChatId(chatId)){
+            return;
+        }
         const accounts = await this.accountRepo.find();
         const keyboard = accounts.map(account => [{
             text: `${account.username.slice(0, 3)}***${account.username.slice(-3)} ${account.id === this.currentAccountId ? '✅' : ''}`,
@@ -841,7 +863,7 @@ class TelegramBotService {
     async showFolderTree(chatId, data, messageId = null) {
         try {
             let folderId = data?.f || '-11';
-            if (!this._checkUserId()) return;
+            if (!this._checkUserId(chatId)) return;
             if (data?.r) {
                // 返回上一级目录，从记录的父级ID中获取
                const parentId = Array.from(this.parentFolderIds).pop() || '-11';
@@ -1032,6 +1054,11 @@ class TelegramBotService {
             this.bot.sendMessage(chatId, '请先使用 /accounts 选择账号');
             return false;
         }
+        return true;
+    }
+    // 校验是否是当前chatId
+    _checkChatId(chatId) {
+        if (chatId != this.chatId) return false;
         return true;
     }
     // 获取当前已脱敏的用户名

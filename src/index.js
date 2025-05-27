@@ -144,6 +144,7 @@ AppDataSource.initialize().then(async () => {
     // 初始化机器人
     await botManager.handleBotStatus(
         ConfigService.getConfigValue('telegram.bot.botToken'),
+        ConfigService.getConfigValue('telegram.bot.chatId'),
         ConfigService.getConfigValue('telegram.bot.enable')
     );
     // 初始化缓存管理器

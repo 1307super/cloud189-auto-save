@@ -310,7 +310,7 @@ async function toggleCustomPushEnable(index) {
         configs[index].enabled = !configs[index].enabled;
         await saveCustomPushConfigsToBackend(configs);
         // renderCustomPushTable(); // 可选：如果状态很多，重新渲染；如果只是开关，可以不重渲染
-        message.success(`推送 "${configs[index].name}" 已${configs[index].enabled ? '启用' : '禁用'}`);
+        // message.success(`推送 "${configs[index].name}" 已${configs[index].enabled ? '启用' : '禁用'}`);
     }
 }
 

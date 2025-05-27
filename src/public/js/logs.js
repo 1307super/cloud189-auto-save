@@ -5,7 +5,7 @@ function initLogs() {
     const closeBtn = logsModal.querySelector('.close-btn');
     
     let eventSource = null;
-
+    const MAX_VISIBLE_ITEMS = 100; // 同时显示的最大日志数量
     function connectSSE() {
         eventSource = new EventSource('/api/logs/events');
 
@@ -22,6 +22,10 @@ function initLogs() {
                 const div = document.createElement('div');
                 div.textContent = data.message;
                 logsContainer.appendChild(div);
+                // 如果日志数量超过限制，移除最旧的日志
+                if (logsContainer.children.length > MAX_VISIBLE_ITEMS) {
+                    logsContainer.removeChild(logsContainer.firstChild);
+                }
                 logsContainer.scrollTop = logsContainer.scrollHeight;
             }
         };

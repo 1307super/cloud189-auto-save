@@ -19,6 +19,12 @@
 </div>
 
 
+## 💬 社区交流
+- ~~[Telegram 群组](https://t.me/cloud189_auto_save) - 加入官方群组获取帮助和分享经验~~ 因不知名原因, 账号被封禁
+- ~~请加[Telegram 临时群组](https://t.me/cloud189_auto_save2)~~ 也没了
+- [Telegram 3群](https://t.me/cloud189_auto_save3) 且加且珍惜
+- ## 遇到问题请先查看 [Wiki 文档](https://github.com/1307super/cloud189-auto-save/wiki)
+
 ## ⚠️ 安全警告
 
 本项目涉及天翼云盘账号密码、Cookie 等敏感隐私信息，为了确保您的数据安全：
@@ -29,10 +35,6 @@
 - 建议使用反向代理并配置 HTTPS 加密访问
 
 您的账号安全比使用便利更重要！
-
-## 💬 社区交流
-- ~~[Telegram 群组](https://t.me/cloud189_auto_save) - 加入官方群组获取帮助和分享经验~~ 因不知名原因, 账号被封禁, 请加[Telegram 临时群组](https://t.me/cloud189_auto_save2)
-- 遇到问题请先查看 [Wiki 文档](https://github.com/1307super/cloud189-auto-save/wiki)
 
 
 ## ✨ 功能特点
@@ -108,6 +110,9 @@ docker run -d \
 
 ## 使用说明
 
+<details>
+<summary>点击展开使用说明</summary>
+    
 ### 1. 账号管理
 - 支持账号密码登录和 Cookie 登录两种方式
 - Cookie 登录步骤：
@@ -262,6 +267,8 @@ docker run -d \
 - Emby 通知需要配置正确的服务器地址和 API Key
 - 如需使用TG机器人创建任务, 如果是老版本系统, 请取消常用目录所有后重新添加
 
+</details>
+    
 ## 📸 界面预览
 
 <details>

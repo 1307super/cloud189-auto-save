@@ -267,7 +267,9 @@
                                     <input type="text" id="ctSourceRegex" placeholder="正则表达式 例如: .*(S\d{1,3}E\d{1,3}).*?(\.\w+)$" style="flex: 2 1 200px;">
                                     <input id="ctTargetRegex" placeholder="例如: 沙尘暴.$1$2" style="flex: 1 1 100px;">
                                 </div>
-                                <small class="form-text">例如：沙尘暴 - S01E06 - 第6集.mkv 正则就填写 .*(S\d{1,3}E\d{1,3}).*?(\.\w+)$ 值填写沙尘暴.$1$2, 结果为值填写沙尘暴.S01E06.mkv</small>
+                                <small class="form-text">例如：沙尘暴 - S01E06 - 第6集.mkv 正则就填写 .*(S\d{1,3}E\d{1,3}).*?(\.\w+)$ 值填写沙尘暴.$1$2, 结果为值填写沙尘暴.S01E06.mkv<br/>
+                                    注意: 如果开启了AI并且正则未填写, 则会使用AI处理文件名; 正则的优先级 > AI
+                                </small>
                             </div>
                             <div class="form-group">
                                 <label>文件名正则匹配（可选）<span class="help-icon" data-tooltip="常用正则表达式示例">?</span></label>
@@ -282,7 +284,9 @@
                                     </select>
                                     <input id="matchValue" placeholder="值" min="0" style="flex: 1 1 100px;">
                                 </div>
-                                <small class="form-text">例如：沙尘暴 - S01E06 - 第6集.mkv 想要转存大于8集的剧集, 正则就填写 (?<=E)\d+ 值填写8, 逻辑是用正则匹配出S01E06中的06与值8进行比较</small>
+                                <small class="form-text">例如：沙尘暴 - S01E06 - 第6集.mkv 想要转存大于8集的剧集, 正则就填写 (?<=E)\d+ 值填写8, 逻辑是用正则匹配出S01E06中的06与值8进行比较<br/>
+                                    注意: 如果启用了AI会默认走AI处理, 正则表达式栏可以用自然语, 例如: 剧集 大于 8 AI会处理筛选剧集大于8的文件; 文件名 不包含 特别版和番外篇 AI会只保留满足条件的
+                                </small>
                             </div>
                             <div class="form-group">
                                 <div class="push-item">
@@ -459,7 +463,10 @@
                             <input type="checkbox" id="enableTgBot">
                             点亮 TG 创任务
                         </label>
+                        <label for="telegramChatId">Token</label>
                         <input type="text" id="tgBotToken" placeholder="Bot Token">
+                        <label for="telegramChatId">Chat ID</label>
+                        <input type="text" id="tgBotChatId" placeholder="Chat ID">
                         <small class="form-text">点亮后即可通过TG机器人管理任务。</small>
                     </div>
                 </div>

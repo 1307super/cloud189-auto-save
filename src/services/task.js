@@ -249,8 +249,8 @@ class TaskService {
         if (!shareInfo.shareId) {
             throw new Error('获取分享信息失败');
         }
-        // 如果启用了 AI 分析
-        if (AIService.isEnabled()) {
+        // 如果启用了 AI 分析 如果任务名和分享名相同, 则使用AI分析结果更新任务名称
+        if (AIService.isEnabled() && taskDto.taskName == shareInfo.fileName) {
             try {
                 const resourceInfo = await this._analyzeResourceInfo(shareInfo.fileName, [], 'folder');
                 // 使用 AI 分析结果更新任务名称
@@ -572,13 +572,15 @@ class TaskService {
                 task.lastFileUpdateTime = new Date();
                 task.currentEpisodes = existingMediaCount + fileCount;
                 task.retryCount = 0;
-                this.eventService.emit('taskComplete', new TaskCompleteEventDto({
-                    task,
-                    cloud189,
-                    fileList: newFiles,
-                    overwriteStrm: false,
-                    firstExecution: firstExecution
-                }));
+                process.nextTick(() => {
+                    this.eventService.emit('taskComplete', new TaskCompleteEventDto({
+                        task,
+                        cloud189,
+                        fileList: newFiles,
+                        overwriteStrm: false,
+                        firstExecution: firstExecution
+                    }));
+                })
             } else if (task.lastFileUpdateTime) {
                 // 检查是否超过3天没有新文件
                 const now = new Date();
@@ -729,8 +731,8 @@ class TaskService {
         // 过滤掉文件夹
         files = files.filter(file => !file.isFolder);
 
-        // 使用 AI 重命名或正则重命名
-        if (AIService.isEnabled()) {
+        // 使用 AI 重命名或正则重命名  如果写了正则, 那么优先使用正则
+        if (AIService.isEnabled() && (!task.sourceRegex || !task.targetRegex)) {
             logTaskEvent(` ${task.resourceName} 开始使用 AI 重命名`);
             try {
                 const resourceInfo = await this._analyzeResourceInfo(
@@ -1408,7 +1410,9 @@ class TaskService {
             if (ConfigService.getConfigValue('alist.enable') && !task.enableSystemProxy && task.account.cloudStrmPrefix) {
                 const pathParts = task.realFolderName.split('/');
                 let alistPath = pathParts.slice(1).join('/');
-                let currentPath = path.basename(task.account.cloudStrmPrefix);
+                let currentPath = task.account.cloudStrmPrefix.includes('/d/') 
+                    ? task.account.cloudStrmPrefix.split('/d/')[1] 
+                    : path.basename(task.account.cloudStrmPrefix);
                 let refreshPath = "";
                 // 首次执行任务需要刷新所有目录缓存
                 if (firstExecution) {
